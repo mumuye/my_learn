@@ -8,21 +8,28 @@ ApplicationContext接口,它由BeanFactory接口派生而来，ApplicationContex
 
 BeanFactory和FactoryBean的区别
 
-      BeanFactory是接口，提供了OC容器最基本的形式，给具体的IOC容器的实现提供了规范，
+      BeanFactory是接口，提供了IOC容器最基本的形式，给具体的IOC容器的实现提供了规范，
 
       FactoryBean也是接口，为IOC容器中Bean的实现提供了更加灵活的方式，FactoryBean在IOC容器的基础上给Bean的实现加上了
-      一个简单工厂模式和装饰模式(如果想了解装饰模式参考：修饰者模式(装饰者模式，Decoration) 我们可以在getObject()方法中灵活配置。
+      一个简单工厂模式和装饰模式,我们可以在getObject()方法中灵活配置。
       其实在Spring源码中有很多FactoryBean的实现类.
 
 
 
-区别：BeanFactory是个Factory，也就是IOC容器或对象工厂，FactoryBean是个Bean。在Spring中，所有的Bean都是由BeanFactory(也就是IOC容器)来进行管理的。但对FactoryBean而言，这个Bean不是简单的Bean，而是一个能生产或者修饰对象生成的工厂Bean,它的实现与设计模式中的工厂模式和修饰器模式类似
+区别：BeanFactory是个Factory，也就是IOC容器或对象工厂，FactoryBean是个Bean。在Spring中，所有的Bean都是由BeanFactory(也就是IOC容器)来进行管理的。
+
+但对FactoryBean而言，这个Bean不是简单的Bean，而是一个能生产或者修饰对象生成的工厂Bean,它的实现与设计模式中的工厂模式和修饰器模式类似
 
 1、 BeanFactory
 
-　　BeanFactory，以Factory结尾，表示它是一个工厂类(接口)， 它负责生产和管理bean的一个工厂。在Spring中，BeanFactory是IOC容器的核心接口，它的职责包括：实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。BeanFactory只是个接口，并不是IOC容器的具体实现，但是Spring容器给出了很多种实现，如 DefaultListableBeanFactory、XmlBeanFactory、ApplicationContext等，其中XmlBeanFactory就是常用的一个，该实现将以XML方式描述组成应用的对象及对象间的依赖关系。XmlBeanFactory类将持有此XML配置元数据，并用它来构建一个完全可配置的系统或应用。
+　　BeanFactory，以Factory结尾，表示它是一个工厂类(接口)， 它负责生产和管理bean的一个工厂。在Spring中，BeanFactory是IOC容器的核心接口，
+它的职责包括：实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。BeanFactory只是个接口，并不是IOC容器的具体实现，
+但是Spring容器给出了很多种实现，如 DefaultListableBeanFactory、XmlBeanFactory、ApplicationContext等，其中XmlBeanFactory就是常用的一个，
+该实现将以XML方式描述组成应用的对象及对象间的依赖关系。XmlBeanFactory类将持有此XML配置元数据，并用它来构建一个完全可配置的系统或应用。
 
-  都是附加了某种功能的实现。 它为其他具体的IOC容器提供了最基本的规范，例如DefaultListableBeanFactory,XmlBeanFactory,ApplicationContext 等具体的容器都是实现了BeanFactory，再在其基础之上附加了其他的功能。
+  都是附加了某种功能的实现。 它为其他具体的IOC容器提供了最基本的规范，
+  例如DefaultListableBeanFactory,XmlBeanFactory,ApplicationContext
+  等具体的容器都是实现了BeanFactory，再在其基础之上附加了其他的功能。
 
 BeanFactory和ApplicationContext就是spring框架的两个IOC容器，现在一般使用ApplicationnContext，其不但包含了BeanFactory的作用，同时还进行更多的扩展。
 
@@ -37,50 +44,16 @@ ApplicationContext以一种更向面向框架的方式工作以及对上下文�
 • 事件传播
 • 载入多个（有继承关系）上下文 ，使得每一个上下文都专注于一个特定的层次，比如应用的web层;
 
-在不使用spring框架之前，我们的service层中要使用dao层的对象，不得不在service层中new一个对象。存在的问题：层与层之间的依赖。
-
-service层要用dao层对象需要配置到xml配置文件中，至于对象是怎么创建的，关系是怎么组合的都交给了spring框架去实现。
-
-
-
-1 Resource resource = new FileSystemResource("beans.xml");
-2 BeanFactory factory = new XmlBeanFactory(resource);
-1 ClassPathResource resource = new ClassPathResource("beans.xml");
-2 BeanFactory factory = new XmlBeanFactory(resource);
-1 ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"applicationContext.xml", "applicationContext-part2.xml"});
-3 BeanFactory factory = (BeanFactory) context;
- 基本就是这些了，接着使用getBean(String beanName)方法就可以取得bean的实例；BeanFactory提供的方法及其简单，仅提供了六种方法供客户调用：
-
-　　boolean containsBean(String beanName) 判断工厂中是否包含给定名称的bean定义，若有则返回true
-　　Object getBean(String) 返回给定名称注册的bean实例。根据bean的配置情况，如果是singleton模式将返回一个共享实例，否则将返回一个新建的实例，如果没有找到指定bean,该方法可能会抛出异常
-　　Object getBean(String, Class) 返回以给定名称注册的bean实例，并转换为给定class类型
-　　Class getType(String name) 返回给定名称的bean的Class,如果没有找到指定的bean实例，则排除NoSuchBeanDefinitionException异常
-　　boolean isSingleton(String) 判断给定名称的bean定义是否为单例模式
-　　String[] getAliases(String name) 返回给定bean名称的所有别名
-复制代码
-package org.springframework.beans.factory;
-import org.springframework.beans.BeansException;
-public interface BeanFactory {
-    String FACTORY_BEAN_PREFIX = "&";
-    Object getBean(String name) throws BeansException;
-    <T> T getBean(String name, Class<T> requiredType) throws BeansException;
-    <T> T getBean(Class<T> requiredType) throws BeansException;
-    Object getBean(String name, Object... args) throws BeansException;
-    boolean containsBean(String name);
-    boolean isSingleton(String name) throws NoSuchBeanDefinitionException;
-    boolean isPrototype(String name) throws NoSuchBeanDefinitionException;
-    boolean isTypeMatch(String name, Class<?> targetType) throws NoSuchBeanDefinitionException;
-    Class<?> getType(String name) throws NoSuchBeanDefinitionException;
-    String[] getAliases(String name);
-}
-复制代码
-
-
 2、FactoryBean
 
-一般情况下，Spring通过反射机制利用<bean>的class属性指定实现类实例化Bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。Spring为此提供了一个org.springframework.bean.factory.FactoryBean的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现。它们隐藏了实例化一些复杂Bean的细节，给上层应用带来了便利。从Spring3.0开始，FactoryBean开始支持泛型，即接口声明改为FactoryBean<T>的形式
+一般情况下，Spring通过反射机制利用<bean>的class属性指定实现类实例化Bean，在某些情况下，实例化Bean过程比较复杂，
+如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。
+Spring为此提供了一个org.springframework.bean.factory.FactoryBean的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。
+FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现。
+它们隐藏了实例化一些复杂Bean的细节，给上层应用带来了便利。从Spring3.0开始，FactoryBean开始支持泛型，即接口声明改为FactoryBean<T>的形式
 
-以Bean结尾，表示它是一个Bean，不同于普通Bean的是：它是实现了FactoryBean<T>接口的Bean，根据该Bean的ID从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，如果要获取FactoryBean对象，请在id前面加一个&符号来获取。
+以Bean结尾，表示它是一个Bean，不同于普通Bean的是：它是实现了FactoryBean<T>接口的Bean，根据该Bean的ID从BeanFactory中获取的实际上
+是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，如果要获取FactoryBean对象，请在id前面加一个&符号来获取。
 
 　　例如自己实现一个FactoryBean，功能：用来代理一个对象，对该对象的所有方法做一个拦截，在调用前后都输出一行LOG，模仿ProxyFactoryBean的功能。
 
