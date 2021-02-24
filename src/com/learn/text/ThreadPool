@@ -15,7 +15,21 @@
             stop ,                       001
             tidying,                    010
             terminated                   011
+
+
    线程池的addWork流程：
+
+
+
+有哪些让AB线程交替执行的办法
+
+
+
+
+
+
+
+
 
 
 
