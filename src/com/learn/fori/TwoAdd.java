@@ -66,6 +66,7 @@ public class TwoAdd {
         // hash 字段存储的是key的hashcode值加工后得到的值。这里是一个扰动函数，将高16位和低16位 异或操作后和和size-1的值按位与操作后得到
         // 扰动的原因是：1让高16位也参与运算，使其能够均匀分布，然后再与size-1 与操作，使其得的的slot的下标不超过table的size
         HashMap<Long, String> longStringHashMap = new HashMap<Long, String>(16, 0.75F);
+        longStringHashMap.put(9L,"测试");
         HashMap<Long, String> longStringHashMap1 = new HashMap<Long, String>(16);
 
 
