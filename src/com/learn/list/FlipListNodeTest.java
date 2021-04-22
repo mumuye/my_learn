@@ -73,7 +73,7 @@ public class FlipListNodeTest {
     }
 
     private static ListNode flipNode1(ListNode preListNode) {
-        // 不能更换每一个node的地址值  todo ,如何翻转这种嵌套的链表
+        // 不能更换每一个node的地址值
         ListNode result = null;
         ListNode head = preListNode;
         Boolean FistFlag = Boolean.TRUE;
