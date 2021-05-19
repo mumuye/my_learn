@@ -4,6 +4,8 @@ package com.learn.others;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,10 +20,16 @@ import java.util.regex.Pattern;
 public class ChineseCheck {
 
     public static void main(String[] args) {
-        String str = "-99.99我91";
+        String str = "GGGG";
       //  List<String> list = new ArrayList<String>();
-       System.out.println("==> " + isContainChinese(str));
+       System.out.println("==> " + find(".*\\d.*",str));
        // System.out.println(str.startsWith("R"));
+        ThreadLocal<String> threadLocal = new ThreadLocal<String>();
+        ArrayList arrayList = new ArrayList();
+
+        double s = 0.5f;
+        Long a  = 1L;
+        AtomicBoolean bo = new AtomicBoolean();
     }
 
 
