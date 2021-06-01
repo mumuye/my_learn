@@ -20,10 +20,20 @@ import java.util.regex.Pattern;
 public class ChineseCheck {
 
     public static void main(String[] args) {
-        String str = "GGGG";
+        String str = "#@15@#猜测是";
       //  List<String> list = new ArrayList<String>();
-       System.out.println("==> " + find(".*\\d.*",str));
-       // System.out.println(str.startsWith("R"));
+       System.out.println("==> " + find("@#",str));
+
+        String[] split = str.split("@#", 2);
+
+        System.out.println(split.length);
+        System.out.println(split[0]);
+        System.out.println(split[1]);
+        String substring = split[0].substring(2,split[0].length());
+        System.out.println(substring);
+
+
+        // System.out.println(str.startsWith("R"));
         ThreadLocal<String> threadLocal = new ThreadLocal<String>();
         ArrayList arrayList = new ArrayList();
 
